@@ -16,31 +16,10 @@ Here are some ideas to get you started:
 -->
 
 
-<!-- ═══════════════════════════════════════════════════════════════════════════ -->
-<!-- 🎮 CONTRIBUTION SHOWCASE                                                    -->
-<!-- ═══════════════════════════════════════════════════════════════════════════ -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/[Kallistina]/[Kallistina]/output/pacman-contribution-graph-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/[Kallistina]/[Kallistina]/output/pacman-contribution-graph.svg">
+  <img alt="pacman contribution graph" src="https://raw.githubusercontent.com/[Kallistina]/[Kallistina]/output/pacman-contribution-graph.svg">
+</picture>
 
-<!-- <img src="./assets/section-game.svg" width="280"/> -->
-
-<br/><br/>
-
-<div align="center">
-  
-  <!-- Pac-Man Contribution Graph -->
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="./assets/pacman-contribution-graph-dark.svg"/>
-    <source media="(prefers-color-scheme: light)" srcset="./assets/pacman-contribution-graph.svg"/>
-    <img alt="Pac-Man eating contributions" src="./assets/pacman-contribution-graph-dark.svg" width="100%"/>
-  </picture>
-  
-  <br/>
-  
-  <sub>👾 Watch Pac-Man devour my contributions!</sub>
-  
-</div>
-
-<br/>
-
-<img src="./assets/divider.svg" width="100%"/>
-
-<br/>
+_generated with [abozanona/pacman-contribution-graph](https://abozanona.github.io/pacman-contribution-graph/)_
