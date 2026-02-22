@@ -22,3 +22,9 @@ Here are some ideas to get you started:
 </picture>
 
 _generated with [abozanona/pacman-contribution-graph](https://abozanona.github.io/pacman-contribution-graph/)_
+
+### Contribution Activity
+
+[![Kallistina's activity graph](https://github-readme-activity-graph.vercel.app/graph?username=Kallistina&theme=github)](https://github.com/Kallistina)
+
+![Kallistina's GitHub stats](https://github-readme-stats.vercel.app/api?username=Kallistina&show_icons=true&include_all_commits=true&count_private=true)
