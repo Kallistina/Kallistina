@@ -1,7 +1,5 @@
 # Kallistina
 
-MSc in Network Engineering @ National and Kapodistrian University of Athens.
-
 ## About Me
 - MSc in Network Engineering @ National and Kapodistrian University of Athens.
 - Interested in networking, systems, and secure infrastructure.
