@@ -4,11 +4,6 @@
 - MSc in Network Engineering @ National and Kapodistrian University of Athens.
 - Interested in networking, systems, and secure infrastructure.
 
-## Current Focus
-- Network architecture and protocol-level understanding.
-- Linux systems administration and automation.
-- Building portfolio projects around reliability and security.
-
 ## Open To
 - Collaborating on networking and infrastructure projects.
 - Internship and junior opportunities in network/systems engineering.
