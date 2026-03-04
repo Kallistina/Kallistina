@@ -23,5 +23,5 @@
   <img alt="pacman contribution graph" src="https://raw.githubusercontent.com/Kallistina/Kallistina/output/pacman-contribution-graph.svg">
 </picture>
 
-## GitHub Stats
-![GitHub stats](https://github-readme-stats.vercel.app/api?username=Kallistina&show_icons=true&theme=merko&rank_icon=percentile&include_all_commits=true)
+## Contribution Graph
+![Contribution graph](https://github-readme-activity-graph.vercel.app/graph?username=Kallistina&bg_color=0d1117&color=7ee787&line=3fb950&point=2ea043&area=true&hide_border=true)
