@@ -22,3 +22,6 @@
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Kallistina/Kallistina/output/pacman-contribution-graph.svg">
   <img alt="pacman contribution graph" src="https://raw.githubusercontent.com/Kallistina/Kallistina/output/pacman-contribution-graph.svg">
 </picture>
+
+## GitHub Stats
+![GitHub stats](https://github-readme-stats.vercel.app/api?username=Kallistina&show_icons=true&theme=merko&rank_icon=percentile&include_all_commits=true)
