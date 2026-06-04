@@ -2,11 +2,7 @@
 
 ## About Me
 - MSc in Network Engineering @ National and Kapodistrian University of Athens.
-- Interested in networking, systems, and secure infrastructure.
-
-## Open To
-- Collaborating on networking and infrastructure projects.
-- Internship and junior opportunities in network/systems engineering.
+- Interested in ml, networking and secure infrastructure.
 
 ## Tech Stack
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
