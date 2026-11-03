@@ -45,36 +45,40 @@ H....SS.....
 ....S.......
 ....KK......
 """
-DOG_A = """
-...........DD.
-..........DBBB
-B.........BBBBN
-.B........BBB.
-..BBBBBBBBBB..
-..BBBBBBBBBB..
-..B.B.....B.B.
-.B...B...B...B
+CAT_A = """
+..........O...O.
+..........OWOOWO
+O.........OWWWWO
+OW........OWEWEO
+.OW.......OWWNWO
+..OWOOOOOOOWWWO.
+..OWWWWWWWWWWWO.
+...OWWWWWWWWWWO.
+...OWO.....OWO..
+..OO.......OO...
 """
-DOG_B = """
-...........DD.
-..........DBBB
-.B........BBBBN
-B.........BBB.
-..BBBBBBBBBB..
-..BBBBBBBBBB..
-...BB....BB...
-...BB....BB...
+CAT_B = """
+..........O...O.
+..........OWOOWO
+O.........OWWWWO
+OW........OWEWEO
+.OW.......OWWNWO
+..OWOOOOOOOWWWO.
+..OWWWWWWWWWWWO.
+...OWWWWWWWWWWO.
+....OWO..OWO....
+....OO....OO....
 """
 
 THEMES = {
     "light": dict(ink="#1c1b22", muted="#6b6875", accent="#5b3fa0", road="#c9c4d6",
                   hill="#ece7f6", temple="#d8cfee", cloud="#f1eff6",
                   H="#4a3426", S="#f0c6a4", T="#5b3fa0", P="#2b2833", K="#1c1b22",
-                  B="#c98a4b", D="#8a5a2e", N="#1c1b22"),
+                  O="#a9a5b4", W="#eeedf3", E="#3f8f4f", N="#f2a7b5"),
     "dark": dict(ink="#e6edf3", muted="#9198a1", accent="#b9a5ec", road="#30363d",
                  hill="#1b1730", temple="#2c2549", cloud="#1a1f27",
                  H="#6b4a36", S="#f0c6a4", T="#9b82e0", P="#c9d1d9", K="#e6edf3",
-                 B="#c98a4b", D="#8a5a2e", N="#0d1117"),
+                 O="#d9dbe0", W="#f5f6f8", E="#3f8f4f", N="#f2a7b5"),
 }
 
 
@@ -111,8 +115,8 @@ def build(c):
     bg = acropolis(380, c) + cloud(120, 40, c) + cloud(560, 28, c) + cloud(780, 56, c)
     dashes = "".join(f'<rect x="{x}" y="{GROUND + 14}" width="16" height="3" fill="{c["road"]}"/>' for x in range(0, W, 48))
     rx, ry = 300, GROUND - 16 * P
-    dx, dy = 372, GROUND - 8 * P
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="Pixel-art Kalliopi running a marathon with a dog past the Acropolis">
+    dx, dy = 372, GROUND - 10 * P
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="Pixel-art Kalliopi running a marathon with her white cat past the Acropolis">
 <style>
   .bg {{ animation: slide 24s linear infinite; }}
   .road {{ animation: road 0.9s linear infinite; }}
@@ -137,9 +141,9 @@ def build(c):
   <g class="fa">{sprite(RUNNER_A, rx, ry, c)}</g>
   <g class="fb">{sprite(RUNNER_B, rx, ry, c)}</g>
 </g>
-<g class="fb">{sprite(DOG_A, dx, dy, c)}</g>
-<g class="fa">{sprite(DOG_B, dx, dy, c)}</g>
-<text x="32" y="{H - 14}" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="{c["muted"]}">running marathons, fuzzers &amp; federated models</text>
+<g class="fb">{sprite(CAT_A, dx, dy, c)}</g>
+<g class="fa">{sprite(CAT_B, dx, dy, c)}</g>
+<text x="12" y="{H - 6}" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="{c["muted"]}">running marathons, fuzzers &amp; federated models</text>
 </svg>
 '''
 
