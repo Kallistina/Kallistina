@@ -1,0 +1,153 @@
+"""Draw the animated pixel-art banner for the GitHub profile README.
+
+Run:  python3 make_runner.py   ->  writes assets/runner-light.svg and assets/runner-dark.svg
+"""
+import os
+
+W, H = 900, 220
+P = 4  # size of one "pixel"
+GROUND = 176  # y of the road
+
+# Sprites: one character per pixel, "." is transparent.
+RUNNER_A = """
+....HHHH....
+...HHHHHH...
+..HHSSSSH...
+.HHHSSSS....
+.HH.SSSS....
+.H...SS.....
+....TTTT....
+...TTTTTT...
+..S.TTTT.S..
+.S..TTTT..S.
+....PPPP....
+....P..P....
+...P....P...
+..S......S..
+.S........S.
+KK........KK
+"""
+RUNNER_B = """
+....HHHH....
+...HHHHHH...
+..HHSSSSH...
+.HHHSSSS....
+HH..SSSS....
+H....SS.....
+....TTTT....
+...TTTTTT...
+...STTTTS...
+...STTTTS...
+....PPPP....
+.....PP.....
+.....PS.....
+....SS......
+....S.......
+....KK......
+"""
+DOG_A = """
+...........DD.
+..........DBBB
+B.........BBBBN
+.B........BBB.
+..BBBBBBBBBB..
+..BBBBBBBBBB..
+..B.B.....B.B.
+.B...B...B...B
+"""
+DOG_B = """
+...........DD.
+..........DBBB
+.B........BBBBN
+B.........BBB.
+..BBBBBBBBBB..
+..BBBBBBBBBB..
+...BB....BB...
+...BB....BB...
+"""
+
+THEMES = {
+    "light": dict(ink="#1c1b22", muted="#6b6875", accent="#5b3fa0", road="#c9c4d6",
+                  hill="#ece7f6", temple="#d8cfee", cloud="#f1eff6",
+                  H="#4a3426", S="#f0c6a4", T="#5b3fa0", P="#2b2833", K="#1c1b22",
+                  B="#c98a4b", D="#8a5a2e", N="#1c1b22"),
+    "dark": dict(ink="#e6edf3", muted="#9198a1", accent="#b9a5ec", road="#30363d",
+                 hill="#1b1730", temple="#2c2549", cloud="#1a1f27",
+                 H="#6b4a36", S="#f0c6a4", T="#9b82e0", P="#c9d1d9", K="#e6edf3",
+                 B="#c98a4b", D="#8a5a2e", N="#0d1117"),
+}
+
+
+def sprite(art, x0, y0, colors):
+    rects = []
+    for r, row in enumerate(art.strip("\n").splitlines()):
+        for c, ch in enumerate(row):
+            if ch != ".":
+                rects.append(f'<rect x="{x0 + c * P}" y="{y0 + r * P}" width="{P}" height="{P}" fill="{colors[ch]}"/>')
+    return "".join(rects)
+
+
+def acropolis(x, c):
+    """A pixel Parthenon on a hill, with its left edge at x."""
+    parts = [
+        f'<path d="M{x},{GROUND} Q{x + 130},{GROUND - 70} {x + 260},{GROUND} Z" fill="{c["hill"]}"/>',
+        f'<rect x="{x + 70}" y="{GROUND - 58}" width="120" height="6" fill="{c["temple"]}"/>',  # steps
+        f'<rect x="{x + 76}" y="{GROUND - 64}" width="108" height="6" fill="{c["temple"]}"/>',
+    ]
+    for i in range(8):  # columns
+        parts.append(f'<rect x="{x + 82 + i * 13}" y="{GROUND - 100}" width="6" height="36" fill="{c["temple"]}"/>')
+    parts.append(f'<rect x="{x + 76}" y="{GROUND - 108}" width="108" height="8" fill="{c["temple"]}"/>')  # entablature
+    parts.append(f'<path d="M{x + 72},{GROUND - 108} L{x + 130},{GROUND - 128} L{x + 188},{GROUND - 108} Z" fill="{c["temple"]}"/>')
+    return "".join(parts)
+
+
+def cloud(x, y, c):
+    return (f'<rect x="{x}" y="{y}" width="48" height="8" fill="{c["cloud"]}"/>'
+            f'<rect x="{x + 8}" y="{y - 8}" width="28" height="8" fill="{c["cloud"]}"/>')
+
+
+def build(c):
+    # Background layer is drawn twice side by side and slid left by one width, so it loops seamlessly.
+    bg = acropolis(380, c) + cloud(120, 40, c) + cloud(560, 28, c) + cloud(780, 56, c)
+    dashes = "".join(f'<rect x="{x}" y="{GROUND + 14}" width="16" height="3" fill="{c["road"]}"/>' for x in range(0, W, 48))
+    rx, ry = 300, GROUND - 16 * P
+    dx, dy = 372, GROUND - 8 * P
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="Pixel-art Kalliopi running a marathon with a dog past the Acropolis">
+<style>
+  .bg {{ animation: slide 24s linear infinite; }}
+  .road {{ animation: road 0.9s linear infinite; }}
+  .fa {{ animation: fa .36s steps(1) infinite; }}
+  .fb {{ animation: fb .36s steps(1) infinite; }}
+  .bob {{ animation: bob .36s steps(1) infinite; }}
+  @keyframes slide {{ to {{ transform: translateX(-{W}px); }} }}
+  @keyframes road {{ to {{ transform: translateX(-48px); }} }}
+  @keyframes fa {{ 0% {{ opacity: 1; }} 50% {{ opacity: 0; }} }}
+  @keyframes fb {{ 0% {{ opacity: 0; }} 50% {{ opacity: 1; }} }}
+  @keyframes bob {{ 0% {{ transform: translateY(0); }} 50% {{ transform: translateY(-{P}px); }} }}
+  @media (prefers-reduced-motion: reduce) {{
+    .bg, .road, .bob {{ animation: none; }}
+    .fa {{ animation: none; opacity: 1; }}
+    .fb {{ animation: none; opacity: 0; }}
+  }}
+</style>
+<g class="bg">{bg}<g transform="translate({W},0)">{bg}</g></g>
+<rect x="0" y="{GROUND}" width="{W}" height="3" fill="{c["road"]}"/>
+<g class="road">{dashes}<g transform="translate({W},0)">{dashes}</g></g>
+<g class="bob">
+  <g class="fa">{sprite(RUNNER_A, rx, ry, c)}</g>
+  <g class="fb">{sprite(RUNNER_B, rx, ry, c)}</g>
+</g>
+<g class="fb">{sprite(DOG_A, dx, dy, c)}</g>
+<g class="fa">{sprite(DOG_B, dx, dy, c)}</g>
+<text x="32" y="{H - 14}" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="{c["muted"]}">running marathons, fuzzers &amp; federated models</text>
+</svg>
+'''
+
+
+if __name__ == "__main__":
+    out = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
+    os.makedirs(out, exist_ok=True)
+    for name, colors in THEMES.items():
+        with open(os.path.join(out, f"runner-{name}.svg"), "w") as f:
+            f.write(build(colors))
+    print("wrote", out)
