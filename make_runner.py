@@ -70,14 +70,47 @@ OW........OWEWEO
 ....OO....OO....
 """
 
+BUG = """
+...KK.
+.RRKRR
+RKRRKR
+RRRRRR
+.K.K.K
+"""
+
+# The bug crawls from the right edge to off-screen left once per loop;
+# the cat and the runner jump while it passes under them.
+LOOP = 5.0          # seconds per bug
+BUG_FROM, BUG_TO = W + 10, -40
+BUG_W = 6 * P
+
+
+def jump_keyframes(name, x_left, x_right, height):
+    """Keyframes that lift a sprite spanning [x_left, x_right] while the bug passes under it."""
+    dist = BUG_FROM - BUG_TO
+    enter = (BUG_FROM - x_right) / dist   # bug's left edge reaches the sprite's right edge
+    leave = (BUG_FROM - (x_left - BUG_W)) / dist  # bug's right edge clears the sprite's left edge
+    start, end = enter - 0.05, leave + 0.03
+    frames = [f"0% {{ transform: translateY(0); }}", f"{start * 100:.2f}% {{ transform: translateY(0); }}"]
+    for i in range(1, 8):
+        u = i / 8
+        y = -height * (1 - (2 * u - 1) ** 2)
+        frames.append(f"{(start + u * (end - start)) * 100:.2f}% {{ transform: translateY({y:.1f}px); }}")
+    frames.append(f"{end * 100:.2f}% {{ transform: translateY(0); }}")
+    frames.append("100% { transform: translateY(0); }")
+    return f"@keyframes {name} {{ " + " ".join(frames) + " }"
+
+
 THEMES = {
     "light": dict(ink="#1c1b22", muted="#6b6875", accent="#5b3fa0", road="#c9c4d6",
                   hill="#ece7f6", temple="#d8cfee", cloud="#f1eff6",
                   H="#4a3426", S="#f0c6a4", T="#5b3fa0", P="#2b2833", K="#1c1b22",
+                  R="#e5484d",
                   O="#a9a5b4", W="#eeedf3", E="#3f8f4f", N="#f2a7b5"),
     "dark": dict(ink="#e6edf3", muted="#9198a1", accent="#b9a5ec", road="#30363d",
                  hill="#1b1730", temple="#2c2549", cloud="#1a1f27",
                  H="#6b4a36", S="#f0c6a4", T="#9b82e0", P="#c9d1d9", K="#e6edf3",
+                 R="#e5484d",
                  O="#d9dbe0", W="#f5f6f8", E="#3f8f4f", N="#f2a7b5"),
 }
 
@@ -116,20 +149,26 @@ def build(c):
     dashes = "".join(f'<rect x="{x}" y="{GROUND + 14}" width="16" height="3" fill="{c["road"]}"/>' for x in range(0, W, 48))
     rx, ry = 300, GROUND - 16 * P
     dx, dy = 372, GROUND - 10 * P
-    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="Pixel-art Kalliopi running a marathon with her white cat past the Acropolis">
+    return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="Pixel-art Kalliopi and her white cat running past the Acropolis, jumping over bugs">
 <style>
   .bg {{ animation: slide 24s linear infinite; }}
   .road {{ animation: road 0.9s linear infinite; }}
   .fa {{ animation: fa .36s steps(1) infinite; }}
   .fb {{ animation: fb .36s steps(1) infinite; }}
   .bob {{ animation: bob .36s steps(1) infinite; }}
+  .bug {{ animation: crawl {LOOP}s linear infinite; }}
+  .jr {{ animation: jr {LOOP}s linear infinite; }}
+  .jc {{ animation: jc {LOOP}s linear infinite; }}
+  @keyframes crawl {{ from {{ transform: translateX(0); }} to {{ transform: translateX({BUG_TO - BUG_FROM}px); }} }}
+  {jump_keyframes("jr", rx, rx + 12 * P, 44)}
+  {jump_keyframes("jc", dx, dx + 16 * P, 34)}
   @keyframes slide {{ to {{ transform: translateX(-{W}px); }} }}
   @keyframes road {{ to {{ transform: translateX(-48px); }} }}
   @keyframes fa {{ 0% {{ opacity: 1; }} 50% {{ opacity: 0; }} }}
   @keyframes fb {{ 0% {{ opacity: 0; }} 50% {{ opacity: 1; }} }}
   @keyframes bob {{ 0% {{ transform: translateY(0); }} 50% {{ transform: translateY(-{P}px); }} }}
   @media (prefers-reduced-motion: reduce) {{
-    .bg, .road, .bob {{ animation: none; }}
+    .bg, .road, .bob, .bug, .jr, .jc {{ animation: none; }}
     .fa {{ animation: none; opacity: 1; }}
     .fb {{ animation: none; opacity: 0; }}
   }}
@@ -137,12 +176,15 @@ def build(c):
 <g class="bg">{bg}<g transform="translate({W},0)">{bg}</g></g>
 <rect x="0" y="{GROUND}" width="{W}" height="3" fill="{c["road"]}"/>
 <g class="road">{dashes}<g transform="translate({W},0)">{dashes}</g></g>
-<g class="bob">
+<g class="bug">{sprite(BUG, BUG_FROM, GROUND - 5 * P, c)}</g>
+<g class="jr"><g class="bob">
   <g class="fa">{sprite(RUNNER_A, rx, ry, c)}</g>
   <g class="fb">{sprite(RUNNER_B, rx, ry, c)}</g>
+</g></g>
+<g class="jc">
+  <g class="fb">{sprite(CAT_A, dx, dy, c)}</g>
+  <g class="fa">{sprite(CAT_B, dx, dy, c)}</g>
 </g>
-<g class="fb">{sprite(CAT_A, dx, dy, c)}</g>
-<g class="fa">{sprite(CAT_B, dx, dy, c)}</g>
 <text x="12" y="{H - 6}" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="{c["muted"]}">running marathons, fuzzers &amp; federated models</text>
 </svg>
 '''
