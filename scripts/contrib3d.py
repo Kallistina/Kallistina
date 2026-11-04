@@ -28,9 +28,9 @@ LEVELS = ("NONE", "FIRST_QUARTILE", "SECOND_QUARTILE", "THIRD_QUARTILE", "FOURTH
 
 THEMES = {
     "light": dict(levels=("#ebe8f2", "#d6c9f0", "#b39ce6", "#8a66d6", "#5b3fa0"),
-                  text="#57534f", strong="#5b3fa0", grid="#a99dc9"),
+                  text="#57534f", strong="#5b3fa0", grid="#bdb3d8"),
     "dark": dict(levels=("#1f1b2e", "#4a3a7d", "#6b52b8", "#9478e6", "#c4b2f5"),
-                 text="#8b949e", strong="#b9a5ec", grid="#55497a"),
+                 text="#8b949e", strong="#b9a5ec", grid="#483e69"),
 }
 
 QUERY = """query($login: String!) { user(login: $login) { contributionsCollection { contributionCalendar {
@@ -102,17 +102,6 @@ def block(x, y, h, color, delay):
             f'<path d="{top}" fill="{color}"/></g>')
 
 
-def stats(weeks):
-    """Busiest day and longest streak of days with at least one contribution."""
-    days = sorted((d for w in weeks for d in w), key=lambda d: d["date"])
-    busiest = max(days, key=lambda d: d["contributionCount"], default=None)
-    longest = run = 0
-    for d in days:
-        run = run + 1 if d["contributionCount"] > 0 else 0
-        longest = max(longest, run)
-    return busiest, longest
-
-
 def floor(n_weeks, t):
     """The flat board the blocks stand on, with a grid line between every day."""
     dx, dy = DEPTH
@@ -122,7 +111,7 @@ def floor(n_weeks, t):
              f'<path d="M{x1},{y0} l{7 * dx},{7 * dy} v3 l{-7 * dx},{-7 * dy} Z" fill="{shade(t["levels"][0], 0.72)}"/>')
     lines = "".join(f'<path d="M{x0 + i * CELL},{y0} l{7 * dx},{7 * dy}"/>' for i in range(n_weeks + 1))
     lines += "".join(f'<path d="M{x0 + k * dx},{y0 + k * dy} H{x1 + k * dx}"/>' for k in range(8))
-    return board + f'<g stroke="{t["grid"]}" stroke-width="1.6" fill="none">{lines}</g>'
+    return board + f'<g stroke="{t["grid"]}" stroke-width="1.1" fill="none">{lines}</g>'
 
 
 def legend(x, y, t):
@@ -156,14 +145,7 @@ def build(total, weeks, t):
         f'<text x="{LEFT - 6 + (6 - wd) * dx}" y="{BASE + (6 - wd) * dy + dy / 2 + 4}" font-size="10" '
         f'text-anchor="end" fill="{t["text"]}">{name}</text>'
         for wd, name in ((1, "Mon"), (3, "Wed"), (5, "Fri")))
-    busiest, longest = stats(weeks)
     details = f'<tspan font-weight="600" fill="{t["strong"]}">{total}</tspan> contributions in the last year'
-    if busiest and busiest["contributionCount"]:
-        when = dt.date.fromisoformat(busiest["date"])
-        details += (f'  ·  busiest day <tspan font-weight="600" fill="{t["strong"]}">{when:%b} {when.day}</tspan>'
-                    f' ({busiest["contributionCount"]})')
-    if longest:
-        details += f'  ·  longest streak <tspan font-weight="600" fill="{t["strong"]}">{longest}</tspan> days'
     return f'''<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" role="img" aria-label="3D contribution graph: {total} contributions in the last year.">
 <style>
   text {{ font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; }}
