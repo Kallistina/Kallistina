@@ -28,9 +28,9 @@ LEVELS = ("NONE", "FIRST_QUARTILE", "SECOND_QUARTILE", "THIRD_QUARTILE", "FOURTH
 
 THEMES = {
     "light": dict(levels=("#ebe8f2", "#d6c9f0", "#b39ce6", "#8a66d6", "#5b3fa0"),
-                  text="#57534f", strong="#5b3fa0", grid="#d6d0e3"),
+                  text="#57534f", strong="#5b3fa0", grid="#a99dc9"),
     "dark": dict(levels=("#1f1b2e", "#4a3a7d", "#6b52b8", "#9478e6", "#c4b2f5"),
-                 text="#8b949e", strong="#b9a5ec", grid="#332d4a"),
+                 text="#8b949e", strong="#b9a5ec", grid="#55497a"),
 }
 
 QUERY = """query($login: String!) { user(login: $login) { contributionsCollection { contributionCalendar {
@@ -122,7 +122,7 @@ def floor(n_weeks, t):
              f'<path d="M{x1},{y0} l{7 * dx},{7 * dy} v3 l{-7 * dx},{-7 * dy} Z" fill="{shade(t["levels"][0], 0.72)}"/>')
     lines = "".join(f'<path d="M{x0 + i * CELL},{y0} l{7 * dx},{7 * dy}"/>' for i in range(n_weeks + 1))
     lines += "".join(f'<path d="M{x0 + k * dx},{y0 + k * dy} H{x1 + k * dx}"/>' for k in range(8))
-    return board + f'<g stroke="{t["grid"]}" stroke-width="1" fill="none">{lines}</g>'
+    return board + f'<g stroke="{t["grid"]}" stroke-width="1.6" fill="none">{lines}</g>'
 
 
 def legend(x, y, t):
